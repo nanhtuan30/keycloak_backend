@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/anhto
+          jwt-set-uri: http://localhost:8080/realms/anhto/protocol/openid-connect/certs
+server:
+  port: 8081
+keycloak:
+  server-url: http://localhost:8080
+  realm: anhto
+  client-id: anhto_client
+  client-secret: ehQRbXKaq9BUFOPFGjwXLtQVAK8P07cd
+  admin-username: anhto
+  admin-password: Tuan3010
