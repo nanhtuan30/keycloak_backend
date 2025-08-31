@@ -20,7 +20,7 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private UserService userService; // Đổi từ EmployeeService thành UserService
+    private UserService userService;
 
     @Autowired
     private KeycloakService keycloakService;
@@ -115,6 +115,19 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("Logout failed: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/client")
+    public ResponseEntity<ApiResponse<String>> createClient(
+            @RequestParam String clientId,
+            @RequestParam String redirectUri) {
+        try {
+            String result = keycloakService.createClient(clientId, redirectUri);
+            return ResponseEntity.ok(ApiResponse.success(result));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error(e.getMessage()));
         }
     }
 

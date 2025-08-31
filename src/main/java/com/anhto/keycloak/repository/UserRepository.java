@@ -27,4 +27,3 @@ public abstract class UserRepository implements JpaRepository<UserEntity, Long> 
         return false;
     }
 }
-
