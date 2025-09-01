@@ -1,11 +1,14 @@
 package com.anhto.keycloak.service;
 
+import com.anhto.keycloak.dto.RegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
@@ -89,17 +92,28 @@ public class KeycloakService {
             ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
             if (response.getStatusCode() == HttpStatus.CREATED) {
-                // Extract user ID from location header
                 String location = response.getHeaders().getFirst("Location");
                 if (location != null) {
                     return location.substring(location.lastIndexOf("/") + 1);
                 }
                 throw new RuntimeException("Failed to extract user ID from response");
             } else {
-                throw new RuntimeException("Failed to create user in Keycloak: " + response.getStatusCode());
+                // Chi tiết hóa error message
+                String errorBody = response.getBody();
+                throw new RuntimeException("Keycloak API error: " + response.getStatusCode() +
+                        " - " + response.getStatusCode().getClass() +
+                        (errorBody != null ? " - " + errorBody : ""));
             }
+        } catch (HttpClientErrorException e) {
+            // Xử lý lỗi HTTP 4xx
+            throw new RuntimeException("Keycloak client error: " + e.getStatusCode() +
+                    " - " + e.getResponseBodyAsString(), e);
+        } catch (HttpServerErrorException e) {
+            // Xử lý lỗi HTTP 5xx
+            throw new RuntimeException("Keycloak server error: " + e.getStatusCode() +
+                    " - " + e.getResponseBodyAsString(), e);
         } catch (Exception e) {
-            throw new RuntimeException("Keycloak user creation failed: " + e.getMessage());
+            throw new RuntimeException("Keycloak user creation failed: " + e.getMessage(), e);
         }
     }
 
@@ -152,7 +166,6 @@ public class KeycloakService {
             if (parts.length < 2) {
                 throw new RuntimeException("Invalid JWT token");
             }
-
             String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
             return objectMapper.readValue(payload, Map.class);
         } catch (Exception e) {
@@ -160,34 +173,51 @@ public class KeycloakService {
         }
     }
 
-    public String createClient(String clientId, String redirectUri) {
-        String token = getAdminToken();
-        String url = serverUrl + "/admin/realms/" + realm + "/clients";
+    public void createKeycloakUser(RegisterRequest request) {
+        String adminToken = getAdminToken();
+        String url = serverUrl + "/admin/realms/" + realm + "/users";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(adminToken);
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("clientId", clientId);
-        body.put("protocol", "openid-connect");
-        body.put("publicClient", false);
-        body.put("enabled", true);
-        body.put("redirectUris", List.of(redirectUri));
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", request.getUsername());
+        userData.put("email", request.getEmail());
+        userData.put("firstName", request.getFirstName() != null ? request.getFirstName() : "");
+        userData.put("lastName", request.getLastName() != null ? request.getLastName() : "");
+        userData.put("enabled", true);
+        userData.put("emailVerified", false);
 
-        HttpEntity<?> entity = new HttpEntity<>(body, headers);
+        Map<String, Object> credential = new HashMap<>();
+        credential.put("type", "password");
+        credential.put("value", request.getPassword());
+        credential.put("temporary", false);
+        userData.put("credentials", new Object[] { credential });
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userData, headers);
 
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return "Client created successfully";
-            } else {
-                throw new RuntimeException("Failed to create client: " + response.getStatusCode());
+            restTemplate.postForEntity(url, requestEntity, String.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.CONFLICT) {
+                throw new RuntimeException("User already exists in Keycloak");
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create client: " + e.getMessage());
+            throw new RuntimeException("Failed to create user in Keycloak: " + e.getMessage());
         }
     }
+
+    public void createKeycloakUser(String username, String email, String firstName, String lastName, String password) {
+        RegisterRequest request = new RegisterRequest();
+        request.setUsername(username);
+        request.setEmail(email);
+        request.setFirstName(firstName);
+        request.setLastName(lastName);
+        request.setPassword(password);
+
+        createKeycloakUser(request); // delegate
+    }
+
 
     private String getAdminToken() {
         String url = serverUrl + "/realms/master/protocol/openid-connect/token";

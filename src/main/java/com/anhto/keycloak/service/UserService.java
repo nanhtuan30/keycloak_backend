@@ -1,8 +1,10 @@
 package com.anhto.keycloak.service;
 
+import com.anhto.keycloak.dto.RegisterRequest;
 import com.anhto.keycloak.entity.UserEntity;
 import com.anhto.keycloak.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,41 +29,18 @@ public class UserService {
             throw new RuntimeException("Email already exists");
         }
 
-        // Create user in Keycloak
-        String keycloakUserId = keycloakService.createUserInKeycloak(
-                username, email, firstName, lastName, password);
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername(username);
+        registerRequest.setEmail(email);
+        registerRequest.setFirstName(firstName);
+        registerRequest.setLastName(lastName);
+        registerRequest.setPassword(password);
 
-        // Save user to local database
-        UserEntity user = new UserEntity();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setKeycloakId(keycloakUserId);
-
-        userRepository.save(user);
+        keycloakService.createKeycloakUser(registerRequest);
     }
 
-    public UserEntity getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserEntity getUserFromToken(String token) {
+        return (UserEntity) keycloakService.parseJwtPayload(token);
     }
 
-    public UserEntity getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    public UserEntity getUserByKeycloakId(String keycloakId) {
-        return userRepository.findByKeycloakId(keycloakId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    public boolean userExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
-    public boolean emailExists(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
 }

@@ -3,6 +3,7 @@ package com.anhto.keycloak.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -10,10 +11,14 @@ import java.time.LocalDateTime;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(nullable = false)
+    private String password;
 
     @Column(unique = true, nullable = false)
     private String email;

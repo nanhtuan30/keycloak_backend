@@ -28,7 +28,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            userService.registerUser( // Đổi từ registerEmployee thành registerUser
+            userService.registerUser(
                     request.getUsername(),
                     request.getEmail(),
                     request.getFirstName(),
@@ -115,19 +115,6 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("Logout failed: " + e.getMessage()));
-        }
-    }
-
-    @PostMapping("/client")
-    public ResponseEntity<ApiResponse<String>> createClient(
-            @RequestParam String clientId,
-            @RequestParam String redirectUri) {
-        try {
-            String result = keycloakService.createClient(clientId, redirectUri);
-            return ResponseEntity.ok(ApiResponse.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.error(e.getMessage()));
         }
     }
 
