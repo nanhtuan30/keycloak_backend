@@ -52,7 +52,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
         try {
-            // ✅ Authenticate directly with Keycloak (single source of truth)
+            // ✅ Authenticate directly with Keycloak
             Map<String, Object> tokenData = keycloakService.authenticateUser(
                     request.getUsername(),
                     request.getPassword());
@@ -64,8 +64,8 @@ public class AuthController {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setAccessToken(accessToken);
             authResponse.setRefreshToken((String) tokenData.get("refresh_token"));
-            authResponse.setExpiresIn((Integer) tokenData.get("expires_in"));
-            authResponse.setRefreshExpiresIn((Integer) tokenData.get("refresh_expires_in"));
+            authResponse.setExpiresIn(((Number) tokenData.get("expires_in")).intValue());
+            authResponse.setRefreshExpiresIn(((Number) tokenData.get("refresh_expires_in")).intValue());
             authResponse.setTokenType((String) tokenData.get("token_type"));
 
             AuthResponse.UserInfo user = new AuthResponse.UserInfo();
@@ -76,14 +76,14 @@ public class AuthController {
             user.setLastName((String) userInfo.get("family_name"));
             authResponse.setUser(user);
 
-            return ResponseEntity.ok(ApiResponse.success("Login successful", authResponse));
+            return ResponseEntity.ok(ApiResponse.success("Đăng nhập thành công", authResponse));
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.error("Tên đăng nhập hoặc mật khẩu không đúng"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("Login failed: " + e.getMessage()));
+                    .body(ApiResponse.error("Có lỗi xảy ra, vui lòng thử lại sau"));
         }
     }
 
