@@ -1,0 +1,130 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="Leaf_Green" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e7eebaa4-068b-407f-bf7a-d4c2e72a1292">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trasua.jrdax"/>
+	<style name="Title" fontName="Arial" fontSize="26.0" bold="true"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18.0"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12.0" bold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12.0"/>
+	<query language="SQL"><![CDATA[select * from products]]></query>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
+	</field>
+	<field name="price" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.name" value="price"/>
+		<property name="com.jaspersoft.studio.field.label" value="price"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
+	</field>
+	<field name="category" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="category"/>
+		<property name="com.jaspersoft.studio.field.label" value="category"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
+	</field>
+	<field name="inStock" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="inStock"/>
+		<property name="com.jaspersoft.studio.field.label" value="inStock"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
+	</field>
+	<group name="Group1">
+		<expression><![CDATA[$F{id}]]></expression>
+		<groupHeader>
+			<band height="40">
+				<element kind="rectangle" uuid="6e6a2f69-aed6-45fd-bd5d-08c1142e76c2" mode="Opaque" x="0" y="13" width="36" height="24" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				<element kind="textField" uuid="53b06611-b6d2-4c3c-a10e-2b349a2d73d3" x="0" y="17" width="36" height="17" forecolor="#006600" fontName="Be Vietnam Pro" fontSize="13.0" bold="true" hTextAlign="Center" style="Detail">
+					<expression><![CDATA[$F{id}]]></expression>
+				</element>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<group name="Group2">
+		<expression><![CDATA[$F{name}]]></expression>
+		<groupHeader>
+			<band height="30">
+				<element kind="textField" uuid="62aa69c1-2611-45a6-84c4-4f7d570ec093" x="0" y="4" width="220" height="16" fontName="Be Vietnam Pro" fontSize="12.0" bold="true" style="SubTitle">
+					<expression><![CDATA[$F{name}]]></expression>
+				</element>
+				<element kind="textField" uuid="f5d865b3-602a-450a-a22b-4e11ded6bc3e" x="230" y="4" width="100" height="16" fontName="Be Vietnam Pro" fontSize="11.0" bold="true" style="SubTitle">
+					<expression><![CDATA[$F{price}.intValue()]]></expression>
+				</element>
+				<element kind="textField" uuid="f8eacaab-81dc-4c0f-af4c-25fd04a4f599" x="455" y="4" width="100" height="16" fontName="Be Vietnam Pro" fontSize="11.0" bold="true" style="SubTitle">
+					<expression><![CDATA[($F{inStock}.booleanValue() ? "Available" : "Unavailable")]]></expression>
+				</element>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="price">
+		<expression><![CDATA[$F{price}]]></expression>
+	</group>
+	<group name="category">
+		<expression><![CDATA[$F{category}]]></expression>
+	</group>
+	<group name="inStock">
+		<expression><![CDATA[$F{inStock}]]></expression>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="93" splitType="Stretch">
+		<element kind="staticText" uuid="3eb8e1ab-7e38-4368-89db-62b6501a8c67" x="0" y="13" width="263" height="33" fontName="Be Vietnam Pro" vTextAlign="Middle" style="Title">
+			<text><![CDATA[JasperReport Test]]></text>
+		</element>
+		<element kind="staticText" uuid="0b5308cc-82cf-49a0-8011-6f875d4c5e32" x="100" y="46" width="174" height="22" fontName="Be Vietnam Pro" fontSize="17.0" style="SubTitle">
+			<text><![CDATA[Ngo Anh Tuan]]></text>
+		</element>
+		<element kind="staticText" uuid="dd3c0cf7-5ef6-4e0c-8884-12281de74a6d" x="0" y="46" width="100" height="22" fontName="Be Vietnam Pro" fontSize="17.0" style="SubTitle">
+			<text><![CDATA[Student:]]></text>
+		</element>
+		<element kind="staticText" uuid="5f265d5e-51f6-4094-a19f-be686594c500" x="100" y="71" width="174" height="22" fontName="Be Vietnam Pro" fontSize="17.0" style="SubTitle">
+			<text><![CDATA[21521629]]></text>
+		</element>
+		<element kind="staticText" uuid="4c2e5d20-c0dc-49d3-a2c7-ffa8b245ae36" x="0" y="71" width="100" height="22" fontName="Be Vietnam Pro" fontSize="17.0" style="SubTitle">
+			<text><![CDATA[ID:]]></text>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</title>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader height="41" splitType="Stretch">
+		<element kind="line" uuid="d69c6691-e92e-45c5-bf2d-c1dc15dabb91" positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1">
+			<pen lineWidth="0.5" lineColor="#999999"/>
+		</element>
+		<element kind="staticText" uuid="c6654af6-1032-4da4-8b3b-7b4e8758ec86" x="0" y="6" width="100" height="29" fontName="Be Vietnam Pro" fontSize="13.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Beverage]]></text>
+		</element>
+		<element kind="staticText" uuid="ee672e33-a87b-4c98-8114-8cda6ceca69a" x="230" y="6" width="100" height="29" fontName="Be Vietnam Pro" fontSize="13.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Price]]></text>
+		</element>
+		<element kind="staticText" uuid="62796a15-3e7f-4a09-9431-e97347f8814a" x="455" y="5" width="100" height="29" markup="html" fontName="Be Vietnam Pro" fontSize="13.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[In Stock]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<element kind="line" uuid="f367c019-9cb7-431c-8713-5a96f9b889aa" positionType="FixRelativeToBottom" x="0" y="0" width="555" height="1">
+				<pen lineWidth="0.5" lineColor="#999999"/>
+			</element>
+			<element kind="line" uuid="02519f40-8679-4e40-a1f1-699bc025a206" positionType="FixRelativeToBottom" x="0" y="1" width="555" height="1">
+				<pen lineWidth="0.5" lineColor="#999999"/>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="20" splitType="Stretch">
+		<element kind="textField" uuid="6f13e17d-4b46-4ede-ab63-9d2685ec9c16" x="433" y="0" width="80" height="20" fontName="Be Vietnam Pro" fontSize="10.0" bold="false" hTextAlign="Right" style="Column header">
+			<expression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></expression>
+		</element>
+		<element kind="textField" uuid="6857db7e-824a-4cda-b8dc-fe5c95aca145" x="513" y="0" width="40" height="20" fontName="Be Vietnam Pro" fontSize="10.0" evaluationTime="Report" bold="false" style="Column header">
+			<expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="ef9fc35f-c45f-4ec6-a5cc-ec2020109ea7" x="0" y="0" width="197" height="20" fontName="Be Vietnam Pro" fontSize="10.0" pattern="EEEEE dd MMMMM yyyy" bold="false" style="Column header">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageFooter>
+	<summary splitType="Stretch"/>
+</jasperReport>
