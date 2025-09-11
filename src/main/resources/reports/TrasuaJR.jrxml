@@ -17,7 +17,7 @@
 		<property name="com.jaspersoft.studio.field.label" value="name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
 	</field>
-	<field name="price" class="java.lang.Float">
+	<field name="price" class="java.lang.Number">
 		<property name="com.jaspersoft.studio.field.name" value="price"/>
 		<property name="com.jaspersoft.studio.field.label" value="price"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="products"/>
